@@ -89,6 +89,7 @@ int GgApp::main(int argc, const char* const* argv)
     const GLfloat r{ (j & 1) * 0.4f + 0.4f };
     const GLfloat g{ (j & 2) * 0.2f + 0.4f };
     const GLfloat b{ (j & 4) * 0.1f + 0.4f };
+    const GLfloat lt[]{ 0.0f, 0.0f, 0.0f, 1.0f };
 
     // 物体の色を設定する
     objectMaterialBuffer.loadAmbientAndDiffuse(r, g, b, 1.0f, i);
@@ -96,6 +97,9 @@ int GgApp::main(int argc, const char* const* argv)
 
   // ビュー変換行列を mv に求める
   const auto mv{ ggLookat(0.0f, 3.0f, 8.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f) };
+
+  mv.projection(light.position, lp);
+
 
   //
   // 影つけ処理の設定
@@ -112,14 +116,12 @@ int GgApp::main(int argc, const char* const* argv)
   //   【宿題】これを Projection Shadow 用の変換行列に置き換える
   // 　　　　　※この変換行列はシャドウマッピングでは使いません
   //
-  const GLfloat m[]
-  {
-      lp[1],   0.0f,   0.0f,   0.0f,
-     -lp[0],   0.0f,  -lp[2], -1.0f,
-      0.0f,   0.0f,    lp[1],   0.0f,
-      0.0f,   0.0f,   0.0f,    lp[1]
-  };
-  const GgMatrix ms{ m };
+  const auto mvs{ ggLookat(lp[0], lp[1], lp[2], lt[0], lt[1], lt[2], 0.0f, 0.0f, 1.0f) };
+
+  const GgMatrix mps{ ggPerspective(1.5f, 1.0f, 1.0f, 5.0f) };
+
+  const auto ms{ mps * mvs };
+
 
   //
   // その他の設定
