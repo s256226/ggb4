@@ -114,10 +114,10 @@ int GgApp::main(int argc, const char* const* argv)
   //
   const GLfloat m[]
   {
-      1.0f,   0.0f,   0.0f,   0.0f,
-      0.0f,   0.0f,   0.0f,   0.0f,
-      0.0f,   0.0f,   1.0f,   0.0f,
-      0.0f,   0.0f,   0.0f,   1.0f
+      lp[1],   0.0f,   0.0f,   0.0f,
+     -lp[0],   0.0f,  -lp[2], -1.0f,
+      0.0f,   0.0f,    lp[1],   0.0f,
+      0.0f,   0.0f,   0.0f,    lp[1]
   };
   const GgMatrix ms{ m };
 
@@ -169,6 +169,7 @@ int GgApp::main(int argc, const char* const* argv)
 
     // 影の描画
     glDisable(GL_DEPTH_TEST);
+
     for (int i = 0; i < objects; ++i)
     {
       // アニメーションの変換行列
